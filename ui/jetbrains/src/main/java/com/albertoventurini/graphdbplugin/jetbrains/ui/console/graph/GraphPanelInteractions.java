@@ -28,6 +28,9 @@ public class GraphPanelInteractions {
     private final QueryExecutionService queryExecutionService;
     private final VisualizationApi visualization;
 
+    private final NodeNavigateAction nodeNavigateAction;
+    private final EdgeNavigateAction edgeNavigateAction;
+
     public GraphPanelInteractions(
             @NotNull final Project project,
             final GraphConsoleView graphConsoleView,
@@ -37,6 +40,8 @@ public class GraphPanelInteractions {
         this.messageBus = messageBus;
         this.visualization = visualization;
         this.queryExecutionService = new QueryExecutionService(project, messageBus);
+        this.nodeNavigateAction = new NodeNavigateAction(project);
+        this.edgeNavigateAction = new EdgeNavigateAction(project);
 
         registerMessageBusSubscribers();
         registerVisualisationEvents();
@@ -88,7 +93,9 @@ public class GraphPanelInteractions {
 
     private void registerVisualisationEvents() {
         visualization.addNodeListener(EventType.CLICK, graphConsoleView.getGraphPanel()::showNodeData);
+        visualization.addNodeListener(EventType.CLICK, this.nodeNavigateAction::navigateToMethodDeclaration);
         visualization.addEdgeListener(EventType.CLICK, graphConsoleView.getGraphPanel()::showRelationshipData);
+        visualization.addEdgeListener(EventType.CLICK, this.edgeNavigateAction::navigateToInvocation);
         visualization.addNodeListener(EventType.HOVER_START, graphConsoleView.getGraphPanel()::showTooltip);
         visualization.addNodeListener(EventType.HOVER_END, graphConsoleView.getGraphPanel()::hideTooltip);
         visualization.addEdgeListener(EventType.HOVER_START, graphConsoleView.getGraphPanel()::showTooltip);
