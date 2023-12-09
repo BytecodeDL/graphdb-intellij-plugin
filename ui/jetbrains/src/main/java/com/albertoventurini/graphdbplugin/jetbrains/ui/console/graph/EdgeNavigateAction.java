@@ -30,6 +30,18 @@ public class EdgeNavigateAction {
     }
 
     public PsiCallExpression getPsiMethodCall(JavaInvokeInsn invocation, PsiMethod method){
+        PsiMethod psiMethod = null;
+        if (method.getContainingFile().getName().endsWith(".java")){
+            psiMethod = method;
+        }else{
+            UsageInfo usage = new UsageInfo(method);
+            psiMethod = PsiTreeUtil.getParentOfType(usage.getFile().findElementAt(usage.getSegment().getEndOffset()), PsiMethod.class);
+        }
+        Collection<PsiCallExpression> callExpressions = PsiTreeUtil.collectElementsOfType(psiMethod, PsiCallExpression.class);
+        return callExpressions.stream().filter(call -> matchInvocation(call, invocation)).findFirst().get();
+    }
+
+    public PsiCallExpression getPsiMethodCall1(JavaInvokeInsn invocation, PsiMethod method){
         UsageInfo usage = new UsageInfo(method);
         PsiMethod psiMethod = PsiTreeUtil.getParentOfType(usage.getFile().findElementAt(usage.getSegment().getEndOffset()), PsiMethod.class);
         Collection<PsiCallExpression> callExpressions = PsiTreeUtil.collectElementsOfType(psiMethod, PsiCallExpression.class);
