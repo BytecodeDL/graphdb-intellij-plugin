@@ -32,7 +32,10 @@ public class EntityActionGroup extends ActionGroup {
             actions = new AnAction[]{
                     new CopyToClipboardAction("Copy relationship", "", null, entity),
                     new RelationshipEditAction("Edit relationship", "", null, dataSourceApi, (GraphRelationship) entity),
-                    new RelationshipDeleteAction("Delete relationship", "", null, dataSourceApi, (GraphRelationship) entity)
+                    new RelationshipDeleteAction("Delete relationship", "", null, dataSourceApi, (GraphRelationship) entity),
+                    new RelationshipOnlyLeaveAction("Only Leave this invocation", "", null, dataSourceApi, (GraphRelationship) entity),
+                    new RelationshipAllDeleteAction("Delete All this invocation", "", null, dataSourceApi, (GraphRelationship) entity)
+
             };
         } else if (entity instanceof ObjectModel) {
             actions = new AnAction[] {

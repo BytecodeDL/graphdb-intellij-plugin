@@ -1,9 +1,10 @@
 <idea-plugin>
-    <id>com.albertoventurini.jetbrains.graphdbplugin</id>
-    <name>Graph Database</name>
+<!--    <id>com.albertoventurini.jetbrains.graphdbplugin</id>-->
+   <id>com.bytecodedl.jetbrains.graphdbplugin</id>
+    <name>ByteCodeDL Graph Database Plugin</name>
     <!-- Version is automatically replaced by the patchPluginXml task -->
     <version>9.9.9</version>
-    <vendor email="aventurini@gmail.com" url="https://github.com/albertoventurini/graphdb-intellij-plugin">Alberto Venturini</vendor>
+    <vendor email="bytecodedl@gmail.com" url="https://github.com/bytecodedl/graphdb-intellij-plugin">bytecodedl</vendor>
 
     <description><![CDATA[
         <p>
@@ -138,7 +139,7 @@
         <applicationConfigurable groupId="tools"
                                  instance="com.albertoventurini.graphdbplugin.jetbrains.configuration.GraphDatabaseConfiguration"/>
         <!-- Update notification -->
-        <postStartupActivity implementation="com.albertoventurini.graphdbplugin.jetbrains.component.updater.PluginUpdateActivity" />
+<!--        <postStartupActivity implementation="com.albertoventurini.graphdbplugin.jetbrains.component.updater.PluginUpdateActivity" />-->
         <!-- Cypher -->
         <fileType
                 name="Cypher"

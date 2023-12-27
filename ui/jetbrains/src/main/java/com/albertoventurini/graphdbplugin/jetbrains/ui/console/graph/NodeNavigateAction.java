@@ -6,7 +6,6 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.usageView.UsageInfo;
 import prefuse.visual.VisualItem;
 
@@ -29,7 +28,7 @@ public class NodeNavigateAction {
 
     public PsiMethod getPsiMethod(GraphNode node){
         String methodSignature = (String)node.getPropertyContainer().getProperties().get("method");
-        JavaMethodSignature signature = new JavaMethodSignature(methodSignature);
+        PsiMethodSignature signature = new PsiMethodSignature(methodSignature);
         PsiMethod method = signature.getMethod(this.project);
         return method;
     }
@@ -45,7 +44,7 @@ public class NodeNavigateAction {
     }
 
     private void navigate(PsiMethod method){
-        UsageInfo usage = new UsageInfo(method);
+        UsageInfo usage = new UsageInfo(method.getNameIdentifier());
         SelectInEditorManager.getInstance(this.project)
                 .selectInEditor(usage.getVirtualFile(), usage.getSegment().getStartOffset(), usage.getSegment().getEndOffset(), true, false);
     }

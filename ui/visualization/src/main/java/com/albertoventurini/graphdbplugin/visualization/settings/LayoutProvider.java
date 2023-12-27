@@ -14,6 +14,9 @@ import com.albertoventurini.graphdbplugin.visualization.layouts.RepaintAndReposi
 import prefuse.Visualization;
 import prefuse.action.ActionList;
 import prefuse.action.RepaintAction;
+import prefuse.action.layout.CollapsedStackLayout;
+import prefuse.action.layout.GridLayout;
+import prefuse.action.layout.graph.*;
 import prefuse.activity.Activity;
 
 import static com.albertoventurini.graphdbplugin.visualization.constants.GraphGroups.EDGE_LABEL;
@@ -27,7 +30,8 @@ public class LayoutProvider {
     public static ActionList forceLayout(Visualization viz, GraphDisplay display, LookAndFeelService lookAndFeel) {
         ActionList actions = new ActionList(viz);
 
-        actions.add(new DynamicForceLayout(GRAPH, ENFORCE_BOUNDS));
+        //actions.add(new DynamicForceLayout(GRAPH, ENFORCE_BOUNDS));
+        actions.add(new NodeLinkTreeLayout(GRAPH));
         actions.add(ColorProvider.colors(lookAndFeel));
         actions.add(new RepaintAndRepositionAction(viz, display));
 

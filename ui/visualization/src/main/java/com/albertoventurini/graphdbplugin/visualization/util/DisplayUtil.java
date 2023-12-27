@@ -8,6 +8,8 @@ package com.albertoventurini.graphdbplugin.visualization.util;
 
 import com.albertoventurini.graphdbplugin.database.api.data.GraphEntity;
 import com.albertoventurini.graphdbplugin.database.api.data.GraphNode;
+import com.albertoventurini.graphdbplugin.database.neo4j.bytecodedl.MethodSignature;
+import com.intellij.util.xml.JavaMethodSignature;
 
 import java.util.List;
 import java.util.Map;
@@ -81,24 +83,30 @@ public class DisplayUtil {
                 .append(typesRepresentation)
                 .append("</p>");
 
-        Stream<Map.Entry<String, Object>> strings = properties.entrySet().stream()
-                .filter(IS_STRING_VALUE)
-                .limit(MAX_TOOLTIP_PROPERTIES);
-        Stream<Map.Entry<String, Object>> other = properties.entrySet().stream()
-                .filter(IS_STRING_VALUE.negate())
-                .limit(MAX_TOOLTIP_PROPERTIES);
+        if(properties.containsKey("method")){
+            MethodSignature signature = new MethodSignature((String) properties.get("method"));
+            sb.append(String.format("<p><b>%s</b>: %s</p>", "method", signature.getMethodName()));
+            sb.append(String.format("<p><b>%s</b>: %s</p>", "class", signature.getShortClassName()));
+        }else{
+            Stream<Map.Entry<String, Object>> strings = properties.entrySet().stream()
+                    .filter(IS_STRING_VALUE)
+                    .limit(MAX_TOOLTIP_PROPERTIES);
+            Stream<Map.Entry<String, Object>> other = properties.entrySet().stream()
+                    .filter(IS_STRING_VALUE.negate())
+                    .limit(MAX_TOOLTIP_PROPERTIES);
 
-        Stream.concat(strings, other)
-                .limit(MAX_TOOLTIP_PROPERTIES)
-                .forEach(entry -> sb.append(start)
-                        .append(entry.getKey())
-                        .append("</b>: ")
-                        .append(truncate(entry.getValue().toString(), MAX_TEXT_LENGTH))
-                        .append("</p>")
-                );
+            Stream.concat(strings, other)
+                    .limit(MAX_TOOLTIP_PROPERTIES)
+                    .forEach(entry -> sb.append(start)
+                            .append(entry.getKey())
+                            .append("</b>: ")
+                            .append(truncate(entry.getValue().toString(), MAX_TEXT_LENGTH))
+                            .append("</p>")
+                    );
 
-        if (properties.size() > MAX_TOOLTIP_PROPERTIES) {
-            sb.append("<p>...</p>");
+            if (properties.size() > MAX_TOOLTIP_PROPERTIES) {
+                sb.append("<p>...</p>");
+            }
         }
 
         return "<html>" + sb.toString() + "</html>";

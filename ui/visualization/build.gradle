@@ -13,6 +13,7 @@ dependencies {
     implementation "de.sciss:prefuse-core:$versionPrefuse"
 
     implementation project(":platform")
+    implementation project(':database:neo4j')
     implementation project(':database:api')
 
     testImplementation "org.mockito:mockito-core:$versionMockito"

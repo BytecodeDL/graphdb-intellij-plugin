@@ -1,9 +1,9 @@
 package com.albertoventurini.graphdbplugin.jetbrains.ui.console.graph;
 
-import com.albertoventurini.graphdbplugin.database.api.data.GraphNode;
 import com.albertoventurini.graphdbplugin.database.api.data.GraphRelationship;
 import com.intellij.ide.SelectInEditorManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.usageView.UsageInfo;
@@ -23,13 +23,13 @@ public class EdgeNavigateAction {
     }
 
     public void navigateToInvocation(GraphRelationship relationship, VisualItem item, MouseEvent e){
-        JavaInvokeInsn invocation =  getJavaInvokeInsn(relationship);
+        PsiInvocationSignature invocation =  getJavaInvokeInsn(relationship);
         PsiMethod method = getPsiMethod(invocation);
         PsiCallExpression methodCall = getPsiMethodCall(invocation, method);
-        navigate(methodCall);
+        navigate(methodCall, method.getContainingFile().getVirtualFile());
     }
 
-    public PsiCallExpression getPsiMethodCall(JavaInvokeInsn invocation, PsiMethod method){
+    public PsiCallExpression getPsiMethodCall(PsiInvocationSignature invocation, PsiMethod method){
         PsiMethod psiMethod = null;
         if (method.getContainingFile().getName().endsWith(".java")){
             psiMethod = method;
@@ -41,14 +41,16 @@ public class EdgeNavigateAction {
         return callExpressions.stream().filter(call -> matchInvocation(call, invocation)).findFirst().get();
     }
 
-    public PsiCallExpression getPsiMethodCall1(JavaInvokeInsn invocation, PsiMethod method){
+    public PsiCallExpression getPsiMethodCall1(PsiInvocationSignature invocation, PsiMethod method){
         UsageInfo usage = new UsageInfo(method);
         PsiMethod psiMethod = PsiTreeUtil.getParentOfType(usage.getFile().findElementAt(usage.getSegment().getEndOffset()), PsiMethod.class);
         Collection<PsiCallExpression> callExpressions = PsiTreeUtil.collectElementsOfType(psiMethod, PsiCallExpression.class);
+        // only find the first match ignore the index
+        // TODO: consider the index
         return callExpressions.stream().filter(call -> matchInvocation(call, invocation)).findFirst().get();
     }
 
-    public boolean matchInvocation(PsiCallExpression call, JavaInvokeInsn invocation){
+    public boolean matchInvocation(PsiCallExpression call, PsiInvocationSignature invocation){
         if (call instanceof PsiMethodCallExpression) {
             String fqn = getFqn((PsiMethodCallExpression) call);
             return invocation.getCallee().endsWith(fqn);
@@ -87,22 +89,22 @@ public class EdgeNavigateAction {
         return fqn;
     }
 
-    public JavaInvokeInsn getJavaInvokeInsn(GraphRelationship relationship){
+    public PsiInvocationSignature getJavaInvokeInsn(GraphRelationship relationship){
         String insn = (String)relationship.getPropertyContainer().getProperties().get("insn");
-        JavaInvokeInsn invocation = new JavaInvokeInsn(insn);
+        PsiInvocationSignature invocation = new PsiInvocationSignature(insn);
         return invocation;
     }
 
-    public PsiMethod getPsiMethod(JavaInvokeInsn invocation){
+    public PsiMethod getPsiMethod(PsiInvocationSignature invocation){
         PsiMethod method = invocation.getCaller(this.project);
         return method;
     }
 
 
 
-    private void navigate(PsiElement element){
+    private void navigate(PsiElement element, VirtualFile virtualFile){
         UsageInfo usage = new UsageInfo(element);
         SelectInEditorManager.getInstance(this.project)
-                .selectInEditor(usage.getVirtualFile(), usage.getSegment().getStartOffset(), usage.getSegment().getEndOffset(), true, false);
+                .selectInEditor(virtualFile, usage.getSegment().getStartOffset(), usage.getSegment().getEndOffset(), true, false);
     }
 }

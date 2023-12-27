@@ -25,7 +25,7 @@ import static java.lang.String.format;
 
 public final class UiHelper {
 
-    public static final int INLINE_TEXT_LENGTH = 80;
+    public static final int INLINE_TEXT_LENGTH = 300;
     public static final String MAP = "map";
     public static final String LIST = "list";
     public static final String TEXT = "text";
@@ -110,13 +110,7 @@ public final class UiHelper {
     private static PatchedDefaultMutableTreeNode objectToTreeNode(String key, Object value, DataSourceApi dataSourceApi, Object rootObject) {
         if (value instanceof String) {
             String string = (String) value;
-            if (string.length() <= INLINE_TEXT_LENGTH) {
-                return new PatchedDefaultMutableTreeNode(modelOf(representUiString(string), key, null, dataSourceApi, rootObject));
-            } else {
-                PatchedDefaultMutableTreeNode parent = new PatchedDefaultMutableTreeNode(modelOf(null, key, TEXT, dataSourceApi, rootObject));
-                parent.add(new PatchedDefaultMutableTreeNode(string));
-                return parent;
-            }
+            return new PatchedDefaultMutableTreeNode(modelOf(string, key, null, dataSourceApi, rootObject));
         }
         return new PatchedDefaultMutableTreeNode(modelOf(Objects.toString(value), key, null, dataSourceApi, rootObject));
     }

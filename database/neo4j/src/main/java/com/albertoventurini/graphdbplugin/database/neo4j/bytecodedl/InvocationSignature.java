@@ -1,24 +1,21 @@
-package com.albertoventurini.graphdbplugin.jetbrains.ui.console.graph;
-
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiMethod;
+package com.albertoventurini.graphdbplugin.database.neo4j.bytecodedl;
 
 /**
  * @author daozhe@alibaba-inc.com
- * @date 2023/12/3 16:05
+ * @date 2023/12/10 09:53
  */
-public class JavaInvokeInsn {
-    private JavaMethodSignature callerSignature;
+public class InvocationSignature {
+    private String callerSignature;
     private String callee;
     private Integer index;
 
-    public JavaInvokeInsn(String insn){
+    public InvocationSignature(String insn){
         String[] parts = insn.split("/");
         if (parts.length != 3) {
             throw new IllegalArgumentException("Invalid instruction format");
         }
 
-        this.callerSignature = new JavaMethodSignature(parts[0]);
+        this.callerSignature = parts[0];
         this.callee = parts[1].replace("$", ".");
 
         try {
@@ -28,8 +25,13 @@ public class JavaInvokeInsn {
         }
     }
 
-    public PsiMethod getCaller(Project project){
-        return this.callerSignature.getMethod(project);
+    public MethodSignature getCallerMethodSignature(){
+        MethodSignature methodSignature = new MethodSignature(this.callerSignature);
+        return methodSignature;
+    }
+
+    public String getCallerSignature(){
+        return this.callerSignature;
     }
 
     public String getCallee(){
@@ -38,6 +40,10 @@ public class JavaInvokeInsn {
 
     public String getCalleeMethodName(){
         return this.callee.substring(callee.lastIndexOf(".")+1);
+    }
+
+    public Integer getIndex(){
+        return this.index;
     }
 
 
