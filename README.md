@@ -1,3 +1,19 @@
+# Neo4j plugin of ByteCodeDL for IDEA
+
+## 功能
+
+![](./bytecodedl-neo4j-plugin.gif)
+
+1. 点击node跳转到对应的method
+2. 点击relationship跳转到对应的对应点
+3. 手动删除实际不能调用的边
+4. 手动删除解析错误的边
+
+## 安装
+
+从releases下载，然后通过通过磁盘上安装插件的方式安装。兼容性只在`2023.2`测过，建议更新IDEA版本到`2023.2`及以上
+
+-----
 # Graph Database plugin for IntelliJ Platform
 
 ![Build and test](https://github.com/albertoventurini/graphdb-intellij-plugin/actions/workflows/build-plugin.yaml/badge.svg)

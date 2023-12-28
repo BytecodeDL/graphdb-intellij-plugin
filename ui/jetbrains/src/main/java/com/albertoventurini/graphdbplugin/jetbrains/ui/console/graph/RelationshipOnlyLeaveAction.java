@@ -23,7 +23,7 @@ public class RelationshipOnlyLeaveAction extends AbstractRelationshipCurdAction 
     }
 
     public ExecuteQueryPayload getQuery(){
-        return new ExecuteQueryPayload("MATCH ()-[n:Call]->() WHERE elementId(n) <> $id and n.insn = $insn DELETE n",
+        return new ExecuteQueryPayload("MATCH ()-[n:Call]->() WHERE elementId(n) <> $id and n.insn = $insn SET n.is_deleted=1 RETURN n",
                 ImmutableMap.of(
                         "id", relationship.getId(),
                         "insn", relationship.getPropertyContainer().getProperties().get("insn")

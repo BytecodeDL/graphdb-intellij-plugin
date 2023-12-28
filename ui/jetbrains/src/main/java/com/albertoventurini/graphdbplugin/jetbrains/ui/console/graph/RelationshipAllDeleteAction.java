@@ -22,7 +22,7 @@ public class RelationshipAllDeleteAction extends AbstractRelationshipCurdAction 
 
     @Override
     public ExecuteQueryPayload getQuery() {
-        return new ExecuteQueryPayload("MATCH ()-[n:Call]->() WHERE n.insn = $insn DELETE n",
+        return new ExecuteQueryPayload("MATCH ()-[n:Call]->() WHERE n.insn = $insn SET n.is_deleted=1 RETURN n",
                 ImmutableMap.of(
                         "insn", relationship.getPropertyContainer().getProperties().get("insn")
                 ),

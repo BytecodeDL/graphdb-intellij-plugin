@@ -1,7 +1,7 @@
 <idea-plugin>
 <!--    <id>com.albertoventurini.jetbrains.graphdbplugin</id>-->
    <id>com.bytecodedl.jetbrains.graphdbplugin</id>
-    <name>ByteCodeDL Graph Database Plugin</name>
+    <name>ByteCodeDL Neo4j IDEA Plugin</name>
     <!-- Version is automatically replaced by the patchPluginXml task -->
     <version>9.9.9</version>
     <vendor email="bytecodedl@gmail.com" url="https://github.com/bytecodedl/graphdb-intellij-plugin">bytecodedl</vendor>
